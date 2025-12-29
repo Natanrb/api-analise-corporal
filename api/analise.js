@@ -78,15 +78,16 @@ export default function handler(req, res) {
   // 🔹 Recomendação
   let recomendacao;
 
-  if (classificacao === "Atleta") {
-    recomendacao = "Manter estratégia focada em performance e recuperação.";
-  } else if (classificacao === "Adequado") {
-    recomendacao = "Foco em recomposição corporal com leve ajuste calórico.";
-  } else if (classificacao === "Moderado") {
-    recomendacao = "Redução gradual de gordura preservando massa magra.";
-  } else {
-    recomendacao = "Prioridade em redução de gordura com estratégia estruturada.";
-  }
+if (classificacao === "Atleta") {
+  recomendacao = "De acordo com a análise realizada, a recomendação é manter o protocolo atual, com foco em performance, recuperação e otimização dos resultados.";
+} else if (classificacao === "Adequado") {
+  recomendacao = "Com base na análise, a indicação é manter o equilíbrio corporal, priorizando a recomposição física e ajustes sutis na ingestão calórica para otimizar a composição corporal.";
+} else if (classificacao === "Moderado") {
+  recomendacao = "Segundo a análise, recomenda-se iniciar um processo gradual de redução de gordura, preservando a massa magra e promovendo hábitos consistentes de alimentação e treino.";
+} else {
+  recomendacao = "Conforme a análise realizada, a recomendação é focar na redução de gordura corporal por meio de uma estratégia estruturada, com acompanhamento nutricional e de treinamento adequados.";
+}
+
 
   return res.status(200).json({
     tmb: Math.round(tmb),
