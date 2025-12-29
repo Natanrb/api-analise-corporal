@@ -1,21 +1,30 @@
 export default function handler(req, res) {
-  // CORS básico
+  // CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // Preflight
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
-  // Apenas POST
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
   }
 
+  const { sexo, idade, peso, altura } = req.body || {};
+
+  if (!sexo || !idade || !peso || !altura) {
+    return res.status(400).json({ error: "Dados incompletos" });
+  }
+
+  const tmb =
+    sexo === "masculino"
+      ? 10 * peso + 6.25 * altura - 5 * idade + 5
+      : 10 * peso + 6.25 * altura - 5 * idade - 161;
+
   return res.status(200).json({
-    status: "ok",
-    mensagem: "API do zero funcionando",
+    tmb: Math.round(tmb),
+    mensagem: "TMB calculada com sucesso",
   });
 }
