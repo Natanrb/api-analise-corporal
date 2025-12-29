@@ -19,41 +19,29 @@ export default function handler(req, res) {
     altura,
     cintura,
     pescoco,
-    quadril
+    quadril,
+    atividade
   } = req.body || {};
 
-  // Validação básica
   if (!sexo || !idade || !peso || !altura || !cintura || !pescoco) {
     return res.status(400).json({ error: "Dados incompletos" });
   }
 
-  // 🔹 TMB (Mifflin-St Jeor)
+  // 🔹 TMB
   const tmb =
     sexo === "masculino"
       ? 10 * peso + 6.25 * altura - 5 * idade + 5
       : 10 * peso + 6.25 * altura - 5 * idade - 161;
 
-  // 🔹 Bioimpedância (US Navy)
+  // 🔹 Gordura corporal (US Navy)
   let gordura;
 
   if (sexo === "masculino") {
-    if (cintura <= pescoco) {
-      return res.status(400).json({
-        error: "Cintura deve ser maior que o pescoço"
-      });
-    }
-
     gordura =
       86.01 * Math.log10(cintura - pescoco) -
       70.041 * Math.log10(altura) +
       36.76;
   } else {
-    if (!quadril || cintura + quadril <= pescoco) {
-      return res.status(400).json({
-        error: "Quadril inválido"
-      });
-    }
-
     gordura =
       163.205 * Math.log10(cintura + quadril - pescoco) -
       97.684 * Math.log10(altura) -
@@ -62,9 +50,51 @@ export default function handler(req, res) {
 
   gordura = Number(gordura.toFixed(1));
 
+  // 🔹 Classificação
+  let classificacao;
+
+  if (sexo === "masculino") {
+    classificacao =
+      gordura < 12 ? "Atleta" :
+      gordura < 18 ? "Adequado" :
+      gordura < 25 ? "Moderado" :
+      "Elevado";
+  } else {
+    classificacao =
+      gordura < 18 ? "Atleta" :
+      gordura < 25 ? "Adequado" :
+      gordura < 32 ? "Moderado" :
+      "Elevado";
+  }
+
+  // 🔹 Gasto diário
+  const fatores = {
+    sedentario: 1.2,
+    leve: 1.375,
+    moderado: 1.55,
+    alto: 1.725
+  };
+
+  const gastoDiario = Math.round(tmb * (fatores[atividade] || 1.2));
+
+  // 🔹 Recomendação
+  let recomendacao;
+
+  if (classificacao === "Atleta") {
+    recomendacao = "Manter estratégia focada em performance e recuperação.";
+  } else if (classificacao === "Adequado") {
+    recomendacao = "Foco em recomposição corporal com leve ajuste calórico.";
+  } else if (classificacao === "Moderado") {
+    recomendacao = "Redução gradual de gordura preservando massa magra.";
+  } else {
+    recomendacao = "Prioridade em redução de gordura com estratégia estruturada.";
+  }
+
   return res.status(200).json({
     tmb: Math.round(tmb),
     gorduraCorporal: gordura,
-    mensagem: "Análise corporal calculada com sucesso"
+    classificacao,
+    gastoDiario,
+    recomendacao
   });
 }
