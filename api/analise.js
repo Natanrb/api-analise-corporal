@@ -38,14 +38,12 @@ export default function handler(req, res) {
 
   if (sexo === "masculino") {
     gordura =
-      86.01 * Math.log10(cintura - pescoco) -
-      70.041 * Math.log10(altura) +
-      36.76;
+      86.01 * Math.log10((cintura - pescoco)/2.54) -
+      70.041 * Math.log10(altura/2.54) + 36.76;
   } else {
     gordura =
-      163.205 * Math.log10(cintura + quadril - pescoco) -
-      97.684 * Math.log10(altura) -
-      78.387;
+      163.205 * Math.log10((cintura + quadril - pescoco)/2.54) -
+      97.684 * Math.log10(altura/2.54) - 78.387;
   }
 
   gordura = Number(gordura.toFixed(1));
