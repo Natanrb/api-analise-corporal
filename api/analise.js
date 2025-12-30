@@ -146,20 +146,7 @@ export default function handler(req, res) {
     recomendacao =
       "Conforme a análise realizada, a recomendação é focar na redução de gordura corporal por meio de uma estratégia estruturada, com acompanhamento nutricional e de treinamento adequados.";
   }
-  let textoExplicacao;
 
-if (gordura < idealMin) {
-  textoExplicacao =
-    "Seu percentual de gordura está abaixo da faixa ideal. Um plano adequado ajuda a manter saúde e performance.";
-} else if (gordura <= idealMax) {
-  textoExplicacao =
-    "Você está dentro da faixa considerada saudável. Um plano personalizado pode ajudar a manter ou otimizar seus resultados.";
-} else {
-  textoExplicacao =
-    "Seu percentual de gordura está acima da faixa ideal. Um plano estruturado pode acelerar seus resultados com segurança.";
-}
-
-document.getElementById("explicacao").innerText = textoExplicacao;
 
 
   // ===============================
